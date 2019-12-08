@@ -40,12 +40,8 @@ public final class XCSharedData: Equatable {
             .compactMap { try? XCScheme(path: $0) }
         breakpoints = try? XCBreakpointList(path: path + "xcdebugger/Breakpoints_v2.xcbkptlist")
 
-        let workspaceSettingsPath = path + "WorkspaceSettings.xcsettings"
-        if workspaceSettingsPath.exists {
-            workspaceSettings = try WorkspaceSettings.at(path: workspaceSettingsPath)
-        } else {
-            workspaceSettings = nil
-        }
+        let workspaceSettingsPaths = [path + "WorkspaceSettings.xcsettings", path + "../project.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings"]
+        workspaceSettings = try workspaceSettingsPaths.first(where: { $0.exists }).map(WorkspaceSettings.at)
     }
 
     // MARK: - Equatable
